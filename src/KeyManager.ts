@@ -22,7 +22,6 @@ export class KeyManager {
     }
 
     const storedKey = await this.getKeyFromKeychain('encrypted_storage_key');
-    console.log("stored key is", storedKey)
     if (storedKey) {
       this.encryptionKey = storedKey;
       return storedKey;
@@ -30,9 +29,7 @@ export class KeyManager {
 
     }
 
-    console.log('Generating new AES key...');
     const newKey = await this.setEncryptionKey();
-    console.log('Generated AES Key:', newKey);
 
     this.encryptionKey = newKey;
     return newKey!;
@@ -52,9 +49,7 @@ export class KeyManager {
       return storedKey as keypair;
     }
 
-    console.log('Generating new RSA keypair...');
     const newKey = await this.setRSAEncryptionKey();
-    console.log('Generated RSA Keypair:', newKey);
 
     this.encryptionKey = newKey;
     return newKey!;
@@ -96,10 +91,8 @@ export class KeyManager {
   private async getKeyFromKeychain(service: string, parseAsJson = false): Promise<string | keypair | null> {
     try {
       const credentials = await this.keychain.getGenericPassword({ service });
-      console.log("credentials are", credentials)
 
       if (credentials) {
-        console.log(`[Keychain] Key securely retrieved: ${service}`);
         return credentials.password;
       }
     } catch (error) {
@@ -113,11 +106,8 @@ export class KeyManager {
    * Common method to save a key to Keychain.
    */
   private async saveKeyToKeychain(service: string, key: string): Promise<void> {
-    console.log("save to the keychain", service, key)
     try {
       await this.keychain.setGenericPassword(service, key, { service });
-    //  const keysss = await this.keychain.getGenericPassword({ service });
-    //  console.log("keys is", keysss)
     } catch (error) {
       throw new Error(`Failed to save key to Keychain (${service}): ${error}`);
     }

@@ -22,10 +22,8 @@ export class EncryptedAsyncStorage {
   async getItem(key: string): Promise<string | null> {
     try {
       const encryptionKey = await this.keyManager.getEncryptionKey();
-     
       const encryptedValue = await this.storageAdapter.getItem(key);
       if (!encryptedValue) return null;
-
       return await this.decryptData(encryptedValue, encryptionKey);
     } catch (error) {
       console.error('Failed to get item:', error);
@@ -40,11 +38,7 @@ export class EncryptedAsyncStorage {
     try {
       const encryptionKey = await this.keyManager.getEncryptionKey();
       const encryptedValue = await this.encryptData(value, encryptionKey);
-      console.log("STorage adapter is", this.storageAdapter)
-      if(this.storageAdapter.setItem) {
-        console.log("calling set function")
         await this.storageAdapter.setItem(key, encryptedValue);
-      }
     } catch (error) {
       console.error('Failed to set item:', error);
     }
@@ -106,10 +100,6 @@ export class EncryptedAsyncStorage {
           await this.encryptData(value, encryptionKey),
         ])
       );
-
-   // console.log("keyValuePairs",keyValuePairs)
-    console.log("encryptedPairs",encryptedPairs)
-
       await this.storageAdapter.multiSet(encryptedPairs as [string, string][]);
     } catch (error) {
       console.error('Failed to set multiple items:', error);
@@ -170,9 +160,6 @@ async multiMerge(keyValuePairs: [string, string][]): Promise<void> {
         await this.encryptData(value, encryptionKey),
       ])
     );
-
-    console.log('Merged Encrypted Pairs:', encryptedPairs);
-
     // Step 4: Store encrypted merged data
     await this.storageAdapter.multiSet(encryptedPairs as [string, string][]);
   } catch (error) {
@@ -228,8 +215,6 @@ async mergeItem(key: string, value: string): Promise<void> {
 
     // Step 4: Encrypt the merged value
     const encryptedValue = await this.encryptData(mergedValue, encryptionKey);
-
-    console.log('Merged Encrypted Value:', encryptedValue);
 
     // Step 5: Save the encrypted merged value back to storage
     await this.storageAdapter.setItem(key, encryptedValue);

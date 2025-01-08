@@ -14,14 +14,7 @@ const keychainAdapter: KeychainAdapter = {
       return await Keychain.getGenericPassword(options);
     },
     async setGenericPassword(service, password, options) {
-        try {
-            console.log("coming here", options, password,options)
-
-            await Keychain.setGenericPassword(service, password, options);
-
-        } catch {
-            console.log("error")
-        }
+      await Keychain.setGenericPassword(service, password, options);
     },
   };
   
@@ -57,10 +50,7 @@ const keychainAdapter: KeychainAdapter = {
   const storageAdapter = {
     getItem: async (key: string) => await AsyncStorage.getItem(key),
 
-    setItem: async (key: string, value: string) => {
-      console.log("at final place", AsyncStorage)
-      await AsyncStorage.setItem(key, value)
-    },
+    setItem: async (key: string, value: string) => await AsyncStorage.setItem(key, value),
   
     removeItem: async (key: string) => await AsyncStorage.removeItem(key),
   
@@ -82,15 +72,7 @@ const keychainAdapter: KeychainAdapter = {
     mergeItem: async (key: string, value: string) =>
       await AsyncStorage.mergeItem(key, value),
   
-    multiMerge: async (keyValuePairs: [string, string][]) => {
-        try {
-            await AsyncStorage.multiMerge(keyValuePairs)
-        } catch(error) {
-                console.log("merge failed", error);
-                
-        }
-    
-    }
+    multiMerge: async (keyValuePairs: [string, string][]) =>  await AsyncStorage.multiMerge(keyValuePairs)
      
   };
 

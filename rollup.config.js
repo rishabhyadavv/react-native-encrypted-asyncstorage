@@ -20,7 +20,7 @@ export default {
     },
   ],
   external: [
-    'react-native', 'rn-encryption' // Explicitly exclude react-native from bundling
+    'react-native', 'rn-encryption', '@react-native-async-storage/async-storage', // Explicitly exclude react-native from bundling
   ],
   plugins: [
     peerDepsExternal(),
